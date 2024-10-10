@@ -4,9 +4,13 @@ import numpy as np
 
 def make_gaussian(size, sigma):
     half = int(size) // 2
-    x, y = np.mgrid[-half:half+1, -half:half+1]
-    g = np.exp(-((x**2 + y**2) / (2*sigma**2))) / (2 * np.pi * sigma**2)
-    return g
+    gaussian = np.zeros((size, size))
+    for i in range(size):
+        for j in range(size):
+            x = i - half
+            y = j - half
+            gaussian[i, j] = np.exp(-(x**2 + y**2) / (2 * sigma**2)) / (2 * np.pi * sigma**2)
+    return gaussian
 
 def to_gray(img):
     gray = np.zeros((img.shape[0], img.shape[1]), np.uint8)
@@ -62,10 +66,10 @@ def process_image(filename):
     cv2.imwrite('images/gray.png', gray)
     cv2.imshow('Blurred', blurred)
     cv2.imwrite('images/blurred.png', blurred)
-    cv2.imshow('Ix', Ix)
-    cv2.imwrite('images/Ix.png', Ix)
-    cv2.imshow('Iy', Iy)
-    cv2.imwrite('images/Iy.png', Iy)
+    # cv2.imshow('Ix', Ix)
+    # cv2.imwrite('images/x.png', Ix)
+    # cv2.imshow('Iy', Iy)
+    # cv2.imwrite('images/y.png', Iy)
     cv2.imshow('Magnitude', magnitude)
     cv2.imwrite('images/magnitude.png', magnitude)
     cv2.imshow('Phase', phase_deg)
