@@ -1,98 +1,76 @@
 import cv2
 import numpy as np
 
-from skimage import color
-from skimage import io
 
+def make_gaussian(size, sigma):
+    half = int(size) // 2
+    x, y = np.mgrid[-half:half+1, -half:half+1]
+    g = np.exp(-((x**2 + y**2) / (2*sigma**2))) / (2 * np.pi * sigma**2)
+    return g
 
-# Load the image
-img = cv2.imread('imageb.png')
+def to_gray(img):
+    gray = np.zeros((img.shape[0], img.shape[1]), np.uint8)
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            gray[i, j] = min(max(0.2989 * img[i, j, 0] + 0.5870 * img[i, j, 1] + 0.1140 * img[i, j, 2], 0), 255)
+    return gray
 
-# Define the Gaussian kernel function
-def gaussian_kernel(size, sigma):
-	size = int(size) // 2
-	x, y = np.mgrid[-size:size+1, -size:size+1]
-	normal = 1 / (2.0 * np.pi * sigma**2)
-	g =  np.exp(-((x**2 + y**2) / (2.0*sigma**2))) * normal
-	return g
+def blur_gaussian(img, size=5, sigma=1):
+    gray = to_gray(img)
+    kernel = make_gaussian(size, sigma)
+    return cv2.filter2D(gray, -1, kernel)
 
+def x_filter(size):
+    f = np.zeros(size)
+    f[size[0]//2, 0] = -1
+    f[size[0]//2, -1] = 1
+    return f
 
+def y_filter(size):
+    f = np.zeros(size)
+    f[0, size[1]//2] = -1
+    f[-1, size[1]//2] = 1
+    return f
 
+def pad_img(img):
+    return np.pad(img, ((1,1),(1,1)), 'constant')
 
-# and convert to grayscale
-def convert_to_grayscale(image):
-    grayscale_img = np.zeros((image.shape[0], image.shape[1]), np.uint8)
-    for i in range(image.shape[0]):
-        for j in range(image.shape[1]):
-            grayscale_img[i, j] = np.clip(0.2989 * image[i, j, 0] + 0.5870 * image[i, j, 1] + 0.1140 * image[i, j, 2])
-    return grayscale_img
+def convolve(img, kernel):
+    h, w = img.shape[0] - kernel.shape[0] + 1, img.shape[1] - kernel.shape[1] + 1
+    result = np.zeros((h, w))
+    for i in range(h):
+        for j in range(w):
+            result[i, j] = np.sum(img[i:i+kernel.shape[0], j:j+kernel.shape[1]] * kernel)
+    return result
 
+def process_image(filename):
+    img = cv2.imread(filename)
+    blurred = blur_gaussian(img)
+    gray = to_gray(img)
 
+    Ix = convolve(pad_img(gray), x_filter((3,3)))
+    Iy = convolve(pad_img(gray), y_filter((3,3)))
 
-# Apply Gaussian filter
-size = 5
-sigma = 1
-gaussian_filter_img = cv2.filter2D(convert_to_grayscale(img), -1, gaussian_kernel(size, sigma))
+    magnitude = np.sqrt(Ix**2 + Iy**2)
+    magnitude[magnitude <= 66] = 0
+    phase = np.arctan2(Iy, Ix)
+    phase_deg = np.degrees(phase)
+    phase_deg[phase_deg <= 10] = 0
 
-def initialize_xfilter(size):
-
-    x_filter = np.zeros(size)
-    h, w = size
-    x_filter[h//2][0]=-1
-    x_filter[h//2][-1]=1
-
-    return x_filter
-
-def initialize_yfilter(size):
-
-    y_filter = np.zeros(size)
-    h, w = size
-    y_filter[0][h//2]=-1
-    y_filter[-1][h//2]=1
-
-    return y_filter
-
-
-def padding(image):
-
-    padded_image = np.pad(image , ((1,1),(1,1)) , 'constant', constant_values=(0,0) )
-
-    return padded_image
-
-
-def conv2d(image, ftr):
-    s = ftr.shape + tuple(np.subtract(image.shape, ftr.shape) + 1)
-    sub_image = np.lib.stride_tricks.as_strided(image, shape = s, strides = image.strides * 2)
-    return np.einsum('ij,ijkl->kl', ftr, sub_image)
-
-
-def main(image_filename):
-    # Load the image
-    img = cv2.imread(image_filename)
-
-    grayscale_img = convert_to_grayscale(img)
-    x_filter = initialize_xfilter((3,3))
-    y_filter = initialize_yfilter((3,3))
-    # convolve the image with the x filter
-    I_x = conv2d(padding(grayscale_img), x_filter)
-
-    # convolve the image with the y filter
-    I_y = conv2d(padding(grayscale_img), y_filter)
-    # calculate the gradient magnitude
-    G = np.sqrt(np.power(I_x,2) + np.power(I_y,2))
-    # apply a threshold. It is different for different images.
-    G = np.where(G > 66, G, 0)
-
-    cv2.imshow('1.Original Image', img)
-    cv2.imshow('2.Grayscale Image', grayscale_img)
-    cv2.imwrite('grayscale.png', grayscale_img)
-    cv2.imshow('3.Gaussian Filtered Image', gaussian_filter_img)
-    cv2.imwrite('gaussian_filter_img.png', gaussian_filter_img)
-    cv2.imshow('4.Gradient Magnitude Image', G)
-    cv2.imwrite('gradient_magnitude.png', G)
+    cv2.imshow('Original', img)
+    cv2.imshow('Gray', gray)
+    cv2.imwrite('images/gray.png', gray)
+    cv2.imshow('Blurred', blurred)
+    cv2.imwrite('images/blurred.png', blurred)
+    cv2.imshow('Ix', Ix)
+    cv2.imwrite('images/Ix.png', Ix)
+    cv2.imshow('Iy', Iy)
+    cv2.imwrite('images/Iy.png', Iy)
+    cv2.imshow('Magnitude', magnitude)
+    cv2.imwrite('images/magnitude.png', magnitude)
+    cv2.imshow('Phase', phase_deg)
+    cv2.imwrite('images/phase.png', phase_deg)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-# Call the main function with the image filename
-main('imageb.png')
-
+process_image('images/imageb.png')
