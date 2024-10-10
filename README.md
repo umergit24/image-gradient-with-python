@@ -54,7 +54,7 @@ These images are saved in the images/ directory.
 
 ## Example
 If you provide an image, such as imageb.png,
-[original image](https://github.com/umergit24/image-gradient-with-python/blob/main/images/image.png)
+![original image](https://github.com/umergit24/image-gradient-with-python/blob/main/images/image.png)
 the program will output several images that highlight different aspects of the gradient processing:
 
 gray.png - Grayscale version of the image.
