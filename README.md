@@ -32,7 +32,7 @@ To run this project, ensure you have the following dependencies installed:
 pip install opencv-python-headless numpy
 ```
 
-Usage
+## Usage
 To process an image, you need to provide an image file as input. Modify the following line in the process_image function to point to your image file:
 
 python
@@ -43,7 +43,7 @@ Run the script:
 ```bash
 python image_gradient.py
 ```
-Outputs
+## Outputs
 The script generates the following outputs:
 
 Grayscale Image: Conversion of the input image to grayscale.
@@ -52,20 +52,20 @@ Gradient Magnitude: Shows the strength of edges in the image.
 Phase Image: Represents the direction of the edges.
 These images are saved in the images/ directory.
 
-Example
+## Example
 If you provide an image, such as imageb.png, the program will output several images that highlight different aspects of the gradient processing:
 
 gray.png - Grayscale version of the image.
 blurred.png - Blurred version using Gaussian filtering.
 magnitude.png - Edge strength.
 phase.png - Edge direction.
-Contributing
+
+## Contributing
 Feel free to fork the repository, make your changes, and submit a pull request. Contributions are welcome!
 
-License
+## License
 This project is open-source and available under the MIT License.
 
-less
-Copy code
+
 
 This file gives an overview of your project, including its purpose, installation steps, usage instructions, and expected outputs. Feel free to adjust details like the image path or additional features if necessary. &#8203;:contentReference[oaicite:0]{index=0}&#8203;
