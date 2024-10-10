@@ -66,23 +66,26 @@ def conv2d(image, ftr):
     return np.einsum('ij,ijkl->kl', ftr, sub_image)
 
 
-def main():
+def main(image_filename):
+    # Load the image
+    img = cv2.imread(image_filename)
+
     grayscale_img = convert_to_grayscale(img)
     x_filter = initialize_xfilter((3,3))
     y_filter = initialize_yfilter((3,3))
-      # convolve the image with the x filter
-    I_x = conv2d( padding(grayscale_img) ,  x_filter)
+    # convolve the image with the x filter
+    I_x = conv2d(padding(grayscale_img), x_filter)
 
     # convolve the image with the y filter
-    I_y = conv2d( padding(grayscale_img) ,  y_filter)
+    I_y = conv2d(padding(grayscale_img), y_filter)
     # calculate the gradient magnitude
-    G = np.sqrt( np.power(I_x,2)  +  np.power(I_y,2) )
+    G = np.sqrt(np.power(I_x,2) + np.power(I_y,2))
     # apply a threshold. It is different for different images.
-    G = np.where (G > 66 , G , 0)
+    G = np.where(G > 66, G, 0)
 
     cv2.imshow('1.Original Image', img)
-    cv2.imshow('2.Grayscale Image', convert_to_grayscale(img))
-    cv2.imwrite('grayscale.png', convert_to_grayscale(img))
+    cv2.imshow('2.Grayscale Image', grayscale_img)
+    cv2.imwrite('grayscale.png', grayscale_img)
     cv2.imshow('3.Gaussian Filtered Image', gaussian_filter_img)
     cv2.imwrite('gaussian_filter_img.png', gaussian_filter_img)
     cv2.imshow('4.Gradient Magnitude Image', G)
@@ -90,5 +93,6 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-main()
+# Call the main function with the image filename
+main('imageb.png')
 
