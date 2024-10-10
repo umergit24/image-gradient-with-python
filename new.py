@@ -7,12 +7,10 @@ def grayscale_image(image):
 
   for i in range(image.shape[0]):
     for j in range(image.shape[1]):
-      #gray_image[i,j] = np.clip( (image[i,j,0] + image[i,j,1] + image[i,j,2] )/3, 0, 255) # using average method
       gray_image[i,j] = np.clip(0.07 * image[i,j,0]  + 0.72 * image[i,j,1] + 0.21 * image[i,j,2], 0, 255) # using luminosity method
 
 
 
-  #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
   # display the image
   cv2.imshow('image',gray_image)
   cv2.waitKey(0)
