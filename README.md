@@ -53,7 +53,9 @@ Phase Image: Represents the direction of the edges.
 These images are saved in the images/ directory.
 
 ## Example
-If you provide an image, such as imageb.png, the program will output several images that highlight different aspects of the gradient processing:
+If you provide an image, such as imageb.png,
+[original image](https://github.com/umergit24/image-gradient-with-python/blob/main/images/image.png)
+the program will output several images that highlight different aspects of the gradient processing:
 
 gray.png - Grayscale version of the image.
 blurred.png - Blurred version using Gaussian filtering.
