@@ -53,18 +53,18 @@ Phase Image: Represents the direction of the edges.
 These images are saved in the images/ directory.
 
 ## Example
+![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/imageb.png)
 If you provide an image, such as imageb.png,
-![original image](https://github.com/umergit24/image-gradient-with-python/blob/main/images/image.png)
 the program will output several images that highlight different aspects of the gradient processing:
 
-gray.png - Grayscale version of the image.
-![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/gray.png)
-blurred.png - Blurred version using Gaussian filtering.
-![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/blurred.png)
-magnitude.png - Edge strength.
-![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/magnitude.png)
-phase.png - Edge direction.
-![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/phase.png)
+gray.png - Grayscale version of the image.   
+![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/gray.png)     
+blurred.png - Blurred version using Gaussian filtering.    
+![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/blurred.png)   
+magnitude.png - Edge strength.    
+![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/magnitude.png)   
+phase.png - Edge direction.   
+![](https://github.com/umergit24/image-gradient-with-python/blob/main/images/phase.png)    
 
 ## Contributing
 Feel free to fork the repository, make your changes, and submit a pull request. Contributions are welcome!
